@@ -7,7 +7,7 @@ code = ''
   code += colors[num]
   colors.delete_at(num)
 end
-mastermind = Breaker.new(code)
+mastermind = Maker.new('CMBG')
 until mastermind.check
   mastermind.play
 end

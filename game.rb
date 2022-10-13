@@ -13,21 +13,21 @@ class Board
     @rows = ["||| ◯ || ◯ || ◯ || ◯ || ○ ○ ○ ○ |"]*12
     @row = 0
     @red = 0
+    @bg = ''
   end
   def guess(num, guess)
-    g1, g2, g3, g4 = guess.split('')
-    @white = 0
+    g = guess.split('')
+    c_copy = @code.dup.split("")
+    @white = (g & c_copy).length
     @red = 0
     4.times do |i|
-      if @code.include?(guess[i])
-        if guess[i] == @code[i]
-          @red += 1
-        else
-          @white += 1
-        end
+      if guess[i] == c_copy[0]
+        @red += 1
+        @white -= 1
       end
+      c_copy.shift
     end
-    new_row = ["||| #{@cc[g1]} || #{@cc[g2]} || #{@cc[g3]} || #{@cc[g4]} ||#{(' ●'.red)*@red}#{' ●'*@white}#{' ○'*(4-@red-@white)} |"]  
+    new_row = ["||| #{@cc[g[0]]} || #{@cc[g[1]]} || #{@cc[g[2]]} || #{@cc[g[3]]} ||#{(' ●'.red)*@red}#{' ●'*@white}#{' ○'*(4-@red-@white)} |"]  
     @rows[num] = new_row
     print
   end 
@@ -69,6 +69,29 @@ class Breaker < Board
       end
     end
     guess(@row, guess)
+    @row += 1
+  end
+end
+
+
+class Maker < Board
+  def play
+    g = ['R', 'G', 'Y', 'B', 'M', 'C']
+    if @row == 0
+      guess(@row, g[0]*4)
+      @guess = g[0]*4
+    else
+      puts 'Press Enter for the next row.'
+      gets
+      if @red + @white != 4
+        guess = @guess[0,@red + @white] + g[@row]*(4-@red+@white)
+        guess(@row, guess[0,4])
+        @guess = guess[0,4]
+      else
+        @guess = @guess[0,4].split("").shuffle().join("")
+        guess(@row, @guess[0,4])
+      end
+    end
     @row += 1
   end
 end
