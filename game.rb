@@ -40,7 +40,7 @@ class Board
   end
   def check
     if @red == 4 or @row == 12
-      p "Game over!"
+      puts "Game over!"
       return true
     end
   end
